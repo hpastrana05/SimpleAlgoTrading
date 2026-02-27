@@ -100,6 +100,7 @@ def main():
         # Entry position
         if entry_check:
             quantity = usable_money*0.95/dm.data["Close"].iloc[-1]
+            quantity = round(quantity, 4)
             response = post_place_market_order(quantity, ticker)
             if response:
                 position_open = True
