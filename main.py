@@ -79,23 +79,16 @@ def main():
             print(f"Running check at: {current_date}")
             run = f"\tActual usable money: {te.usable_money}\n" \
                   f"\tPosition open: {position_open}\n"\
-                  f"\tLast data update: {data_update_date}\n"\
+                  f"\tLast data update: {current_date}\n"\
                   f"\tLast available list update: {avail_list_date}\n"
             print(run)
-
-
-        #Fetch actual data -> cambiar a cuando los segundos sean 0
-        if now.second == 0:
-            if not data_updated:
-                te.update_data()
-                data_updated = True
-                data_timer = current_time
-
-        else: data_updated = False
 
         if not can_trade:
             time.sleep(60)
             continue
+        
+        # Updated the data
+        te.update_data()
 
         # Check the strategies in the TradingEngine
         te.check_strategies()

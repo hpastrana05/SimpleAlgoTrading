@@ -82,11 +82,6 @@ while True:
     current_time = time.time()
     now = datetime.now()
 
-    if now.second == 0:
-        if not data_updated:
-            dm.update_data()
-            data_updated = True
-            data_timer = current_time
-            print(dm.data.tail())
-            
-    else: data_updated = False
+    dm.update_data()
+    print(".")
+    time.sleep(0.01)
