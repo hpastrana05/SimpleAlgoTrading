@@ -9,11 +9,11 @@ from trading_api import post_place_market_order
 
 class StrategyManager:
 
-    def __init__(self, name, ticker_api, ticker_data, indicators, temporality, period):
+    def __init__(self, name: str, ticker_api:str, ticker_data:str, indicators:dict, interval:str, period:str):
         self.name = name
         self.ticker = ticker_api
         self.indicators = indicators
-        self.dm = DataManager(ticker_data, indicators, temporality, period)
+        self.dm = DataManager(ticker_data, indicators, interval, period)
 
         self.position_open = False
         self.position_quantity = 0
@@ -46,18 +46,15 @@ class StrategyManager:
         """
         Buys in the position
         """
-        quantity = money*0.95/dm.data["Close"].iloc[-1]
+        quantity = money*0.95/self.dm.data["Close"].iloc[-1]
         quantity = round(quantity, 4)
         response = post_place_market_order(quantity, self.ticker)
         if response:
             self.position_open = True
             self.position_quantity = quantity
             print(f"Market order BUY placed at: {response["createdAt"]}\n Ticker: {response['ticker']} \n Quantity: {response['quantity']}")
-
-            print(f"Usable money: {usable_money*0.05}")
         else:
             print("Error on BUY order")
-
 
     def sell_position(self):
         """
@@ -81,14 +78,19 @@ class StrategyManager:
         if self.check_exit():
             self.sell_position()
 
+    def update_data(self):
+        self.dm.update_data()
 
 """
 {
     "name": "Nombre",
-    "ticker": "ticker",
-    "interval": "interval",
+    "ticker_api": "ticker",
+    "ticker_data": "ticker"
+    "indicators": {}
+    "interval": "1m"
+    "period": "1D"
     "entry_rules": {},
     "close_rules": {},
-    "indicators": {}
+    
 }
 """

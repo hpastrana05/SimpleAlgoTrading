@@ -5,12 +5,17 @@ This project its mean to be a really simple starting on Algo Trading.
 Will run on an infinite loop and will be testing/using strategies.
 
 
-Refactorice whole project. Main.py has the base and build from that the trading_engine and the strategy_manager
-
-
 ## Platform
 It will use the platform Trading212 new api
 
+## Working code
+
+Arquitecture: 
+```
+TradingEngine            # Controls the API and total money    
+    └── StrategyManager  # Controls One single strategy
+        └── DataManager  # Each strategy uses its own data manager
+```
 ## Trading_API
 
 Improve documentation of each function for the arguments

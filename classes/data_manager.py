@@ -45,7 +45,7 @@ class DataManager:
                     bbands = ta.bbands(self.data["Close"], length=value[0], std=value[1])
                     self.data[f'BBands_{value}'] = bbands
                 elif name == "EMA_CROSS":
-                    self.data[f"EMA_CROSS_{value}"] = ta.cross(self.data[f"EMA_{value[0]}"], self.data[f"EMA_{value[1]}"])
+                    self.data[f"EMA_CROSS_{value}"] = ta.cross(self.data[f"EMA_{value[0]}"], self.data[f"EMA_{value[1]}"],above=True, equal=False)
 '''
 indicators = {
     "EMA": [10, 20],

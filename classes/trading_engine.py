@@ -3,18 +3,21 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from trading_api import get_available_instruments, get_account_summary
+from classes.strategy_manager import StrategyManager
 
 class TradingEngine:
 
-    def __init__(self):
+    def __init__(self, strategy_list):
         self.account_summary = {}
         self.usable_money = 0
         self.current_tickers = []
         self.acc_value = 0 
         self.investments_value = 0
+        self.strategies = None
 
         self.update_summary_values()
         self.update_current_tickers()
+        self.insert_strategies(strategy_list)
 
     def fetch_tradable_tickers(self) -> list[str]:
         """
@@ -47,7 +50,6 @@ class TradingEngine:
         if avail:
             self.tradable_tickers = avail
 
-
     def fetch_acc_summary(self) -> dict:
         """
         Returns actual account summary
@@ -69,7 +71,13 @@ class TradingEngine:
         """
         if self.account_summary:
             self.usable_money = self.account_summary['cash']['availableToTrade']
-        
+    
+    def _update_strategy_money(self):
+        """
+        TODO: Updates the money for the strategies
+        """
+        pass
+
     def _update_acc_value(self):
         """
         Retrieves the total account value from summary
@@ -104,3 +112,31 @@ class TradingEngine:
               f"\tActual account value: {self.acc_value}\n" \
               
         print(run)
+
+    def insert_strategies(self, strategy_list):
+        """
+        Initializes the strategies on the list
+        TODO: Add weights/money to strategies for the money they will operate
+        """
+        final_list = []
+        for strategy in strategy_list:
+            strat = StrategyManager(**strategy)
+            final_list.append(strat)
+        
+        self.strategies = final_list
+
+    def check_strategies(self):
+        """
+        Should be runned with acc summary values updated
+        TODO: give the money to the strategies 
+        """
+        for strat in self.strategies:
+            # Right now uses all the money (1 strategy)
+            strat.check_strategy(self.usable_money)
+    
+    def update_data(self):
+        """
+        Updates data manager on all stratgies
+        """
+        for strat in self.strategies:
+            strat.update_data()
