@@ -50,11 +50,13 @@ def main():
     avail_list_timer = current_time
     data_timer = current_time
 
+    data_updated = False
     last_quantity = 0
     position_open = False
 
     while True:
         current_time = time.time()
+        now = datetime.now()
 
         # Every 5 seconds updates acc summary
         if current_time - acc_summary_timer >= 5:
@@ -83,10 +85,13 @@ def main():
 
 
         #Fetch actual data -> cambiar a cuando los segundos sean 0
-        if current_time - data_timer >= 60:
-            # print("Data Updated")
-            te.update_data()
-            data_timer = current_time
+        if now.second == 0:
+            if not data_updated:
+                te.update_data()
+                data_updated = True
+                data_timer = current_time
+
+        else: data_updated = False
 
         if not can_trade:
             time.sleep(60)

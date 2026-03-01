@@ -11,7 +11,7 @@ class DataManager:
         self.period = period
         self.now = dt.datetime.now()
         self.data = self.fetch_data(ticker, interval, period)
-        self.add_indicators(indicators)
+        self.update_indicators()
 
 
     def fetch_data(self, ticker, interval, period):
@@ -26,11 +26,14 @@ class DataManager:
         data_len = len(self.data)
         new_data = self.fetch_data(self.ticker, self.interval, self.period)
         self.data = pd.concat([self.data, new_data]).drop_duplicates().reset_index(drop=True)
+        self.update_indicators()
         while len(self.data) > data_len:
             self.data = self.data[1:]
+        
     
-    def add_indicators(self, indicators):
+    def update_indicators(self):
         """Add technical indicators to the data."""
+        indicators = self.indicators
         for name, values in indicators.items():
             for value in values:
                 if name == "EMA":               

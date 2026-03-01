@@ -1,4 +1,6 @@
 import pandas_ta as ta
+import time
+from datetime import datetime
 from trading_api import *
 from classes.data_manager import DataManager
 from classes.trading_engine import TradingEngine
@@ -25,12 +27,14 @@ strategy_list = [
     }
 ]
 
-te = TradingEngine(strategy_list)
+# te = TradingEngine(strategy_list)
 
 dm = DataManager(ticker_data, indicators, interval, period)
 
 
 """
+
+# Check data manager updates correctly
 print("------DATA MANAGER---------")
 print("tail:")
 print(dm.data.tail())
@@ -57,8 +61,9 @@ for i in found_list:
     print(dm.data[['Close', "EMA_10", "EMA_25"]].iloc[i-1])
     print(dm.data[['Close', "EMA_10", "EMA_25"]].iloc[i])
     print(dm.data[['Close', "EMA_10", "EMA_25"]].iloc[i+1])
-"""        
+   
 
+# Check the ta.cross works correctly
 above_list = ta.cross(dm.data["EMA_10"], dm.data["EMA_25"], above=True, equal=False)
 down_list = ta.cross(dm.data["EMA_10"], dm.data["EMA_25"], above=False, equal=False)
 
@@ -69,3 +74,19 @@ for i in range(len(above_list)):
         print(f"Above cross found in {i}")
     if dw == 1:
         print(f"Down cross found in {i}")
+""" 
+
+# Checks the second 0 works
+data_updated = False
+while True:
+    current_time = time.time()
+    now = datetime.now()
+
+    if now.second == 0:
+        if not data_updated:
+            dm.update_data()
+            data_updated = True
+            data_timer = current_time
+            print(dm.data.tail())
+            
+    else: data_updated = False
