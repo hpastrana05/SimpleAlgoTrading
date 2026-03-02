@@ -57,12 +57,12 @@ def main():
         now = datetime.now()
 
         # Every 5 seconds updates acc summary
-        if current_time - acc_summary_timer >= 5:
+        if current_time - acc_summary_timer >= 30:
             acc_summary_timer = current_time
             te.update_summary_values()
 
-        # Every 50 seconds updates tradable tickers
-        if current_time - avail_list_timer >= 50:
+        # Every 60 seconds updates tradable tickers
+        if current_time - avail_list_timer >= 60:
             avail_list_timer = current_time
             te.update_current_tickers()
             can_trade = te.ticker_availability(ticker_api)
@@ -87,8 +87,10 @@ def main():
             time.sleep(60)
             continue
 
-        # Updated the data
-        te.update_data()
+        # Updates the data every 15 seconds
+        if current_time - data_timer >= 15:
+            data_timer = current_time
+            te.update_data()
 
         # Check the strategies in the TradingEngine
         te.check_strategies()
