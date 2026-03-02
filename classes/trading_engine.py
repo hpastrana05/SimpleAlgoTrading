@@ -26,6 +26,7 @@ class TradingEngine:
         1req / 50s
         """
         avail = get_available_instruments()
+        # print(avail)
         avail_list = []
         if avail:
             for data in avail:
@@ -39,6 +40,7 @@ class TradingEngine:
         return: bool
         """
         avail_list = self.current_tickers
+        #print(avail_list)
         return ticker in avail_list
 
     def update_current_tickers(self):
@@ -48,7 +50,8 @@ class TradingEngine:
         """
         avail = self.fetch_tradable_tickers()
         if avail:
-            self.tradable_tickers = avail
+            self.current_tickers = avail
+        
 
     def fetch_acc_summary(self) -> dict:
         """

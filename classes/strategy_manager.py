@@ -26,6 +26,7 @@ class StrategyManager:
         entry_check = False
         cross_sequence = list(ta.cross(self.dm.data["EMA_10"], self.dm.data["EMA_25"], above=True, equal=False))
         if cross_sequence[-2] == 1 and not self.position_open:
+            print("found entry")
             entry_check = True
         
         return entry_check
@@ -38,6 +39,7 @@ class StrategyManager:
         if self.position_open:
             cross_sequence = list(ta.cross(self.dm.data["EMA_10"], self.dm.data["EMA_25"], above=False, equal=False))
             if cross_sequence[-2] == 1:
+                print("found exit")
                 exit_check = True
 
         return exit_check
@@ -80,6 +82,14 @@ class StrategyManager:
 
     def update_data(self):
         self.dm.update_data()
+    
+    def check_last_entries(self):
+        cross_sequence = list(ta.cross(self.dm.data["EMA_10"], self.dm.data["EMA_25"], above=True, equal=False))
+        for cross in cross_sequence:
+            if cross == 1:
+                print("found")
+        
+        
 
 """
 {
@@ -93,4 +103,28 @@ class StrategyManager:
     "close_rules": {},
     
 }
+"""
+"""
+ticker_data = "AAPL"
+ticker_api = "AAPL_US_EQ" 
+interval = "1m"
+period = "1D"
+# Indicators needed for the Strategy
+indicators = {
+    "EMA": [10, 25]
+}
+
+strategy = {
+        "name": "Strategia 1",
+        "ticker_api": ticker_api,
+        "ticker_data": ticker_data,
+        "indicators": indicators,
+        "interval": interval,
+        "period": period,
+    }
+
+
+strat = StrategyManager(**strategy)
+
+strat.check_last_entries()
 """

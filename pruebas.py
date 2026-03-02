@@ -27,9 +27,9 @@ strategy_list = [
     }
 ]
 
-# te = TradingEngine(strategy_list)
+#te = TradingEngine(strategy_list)
 
-dm = DataManager(ticker_data, indicators, interval, period)
+# dm = DataManager(ticker_data, indicators, interval, period)
 
 
 """
@@ -75,6 +75,7 @@ for i in range(len(above_list)):
     if dw == 1:
         print(f"Down cross found in {i}")
 """ 
+""" 
 
 # Checks the second 0 works
 data_updated = False
@@ -85,3 +86,15 @@ while True:
     dm.update_data()
     print(".")
     time.sleep(0.01)
+
+
+""" 
+avail = get_available_instruments()
+print(avail)
+avail_list = []
+if avail:
+    for data in avail:
+        avail_list.append(data["ticker"])
+    avail_list
+
+print(avail_list)

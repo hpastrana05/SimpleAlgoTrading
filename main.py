@@ -49,9 +49,7 @@ def main():
     running_check_timer = current_time - 60*30
     avail_list_timer = current_time
     data_timer = current_time
-
-    data_updated = False
-    last_quantity = 0
+    
     position_open = False
 
     while True:
@@ -86,7 +84,7 @@ def main():
         if not can_trade:
             time.sleep(60)
             continue
-        
+
         # Updated the data
         te.update_data()
 
