@@ -58,10 +58,12 @@ def main():
 
         # Every 5 seconds updates acc summary
         if current_time - acc_summary_timer >= 5:
+            acc_summary_timer = current_time
             te.update_summary_values()
 
         # Every 50 seconds updates tradable tickers
         if current_time - avail_list_timer >= 50:
+            avail_list_timer = current_time
             te.update_current_tickers()
             can_trade = te.ticker_availability(ticker_api)
 
