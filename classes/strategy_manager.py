@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pandas_ta as ta
+from datetime import datetime
 
 from classes.data_manager import DataManager
 from trading_api import post_place_market_order
@@ -74,11 +75,17 @@ class StrategyManager:
         """
         Checks parts of the strategy.
         """
-        if self.check_entry():
+        now = datetime.now()
+
+        if self.check_entry() and not (now.hour == 21 and now.minute >= 58):
             self.buy_position(money)
 
         if self.check_exit():
             self.sell_position()
+        
+        if now.hour == 21 and now.minute == 58:
+            self.sell_position()
+
 
     def update_data(self):
         self.dm.update_data()

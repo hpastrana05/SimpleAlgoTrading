@@ -5,6 +5,18 @@ from trading_api import *
 from classes.data_manager import DataManager
 from classes.trading_engine import TradingEngine
 
+
+exchanges = get_exchanges_metadata()
+
+for ex in exchanges:
+    if "AAPL" in ex["name"]:
+        print(ex["name"])
+        print(ex["workingSchedule"])
+
+exit
+
+
+"""
 ticker_data = "AAPL"
 ticker_api = "AAPL_US_EQ" 
 interval = "1m"
@@ -31,6 +43,7 @@ strategy_list = [
 
 # dm = DataManager(ticker_data, indicators, interval, period)
 
+"""
 
 """
 
@@ -89,6 +102,8 @@ while True:
 
 
 """ 
+
+"""
 avail = get_available_instruments()
 print(avail)
 avail_list = []
@@ -98,3 +113,4 @@ if avail:
     avail_list
 
 print(avail_list)
+"""

@@ -6,9 +6,10 @@ load_dotenv()
 
 IS_DEMO = True
 
+API_VER = "api/v0/"
 #LINKS
-DEMO_LINK = "https://demo.trading212.com/api/v0/"
-LIVE_LINK = "https://live.trading212.com/api/v0/"
+DEMO_LINK = f"https://demo.trading212.com/{API_VER}" 
+LIVE_LINK = f"https://live.trading212.com/{API_VER}"
 
 # API KEYS
 if IS_DEMO:

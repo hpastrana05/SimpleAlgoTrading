@@ -63,4 +63,10 @@ print(dm.data.columns)
 print(dm.data.tail())
 
 '''
-
+"""
+This function will download and save the data taking into account this:
+1m	                   ->   7 days
+2m, 5m, 15m, 30m, 90m  ->   60 days
+1h	                   ->   2 years
+1d, 1wk, 1mo           ->   MAX
+"""
