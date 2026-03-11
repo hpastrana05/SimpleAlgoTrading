@@ -1,9 +1,9 @@
 import time
+import json
 import pandas_ta as ta
 from datetime import datetime
 
 from trading_api import *
-from classes.data_manager import DataManager
 from classes.trading_engine import TradingEngine
 
 
@@ -12,26 +12,15 @@ def main():
     print("Algo Trading script running...")
     # Ticker for the T212 api
 
-    # CONFIG
-    ticker_data = "AAPL"
-    ticker_api = "AAPL_US_EQ" 
-    interval = "1m"
-    period = "1D"
-    # Indicators needed for the Strategy
-    indicators = {
-        "EMA": [10, 25]
-    }
+    strategy_path = "./strategies/estrategia_prueba.json"
 
-    strategy_list = [
-        {
-            "name": "Strategia 1",
-            "ticker_api": ticker_api,
-            "ticker_data": ticker_data,
-            "indicators": indicators,
-            "interval": interval,
-            "period": period,
-        }
-    ]
+    with open(strategy_path) as f:
+        strategy = json.load(f)
+    
+    ticker_api = strategy["ticker_api"]
+
+    strategy_list = []
+    strategy_list.append(strategy)
 
     te = TradingEngine(strategy_list)
 
@@ -93,7 +82,8 @@ def main():
             te.update_data()
 
         # Check the strategies in the TradingEngine
-        te.check_strategies()
+        if now.second == 0:
+            te.check_strategies()
 
         time.sleep(0.01)
 

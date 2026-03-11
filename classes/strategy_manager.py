@@ -6,44 +6,35 @@ import pandas_ta as ta
 from datetime import datetime
 
 from classes.data_manager import DataManager
+from classes.signal_classes import *
 from trading_api import post_place_market_order
+
 
 class StrategyManager:
 
-    def __init__(self, name: str, ticker_api:str, ticker_data:str, indicators:dict, interval:str, period:str):
+    def __init__(self, name: str, ticker_api:str, ticker_data:str, indicators:dict, interval:str, period:str, entry_rule:dict, exit_rule:dict):
         self.name = name
         self.ticker = ticker_api
         self.indicators = indicators
         self.dm = DataManager(ticker_data, indicators, interval, period)
+
+        self.entry_signal = build_signal(entry_rule)
+        self.exit_signal = build_signal(exit_rule)
 
         self.position_open = False
         self.position_quantity = 0
 
 
     def check_entry(self):
-        """
-        Right now simple EMA cross 10 25
-        """
-        entry_check = False
-        cross_sequence = list(ta.cross(self.dm.data["EMA_10"], self.dm.data["EMA_25"], above=True, equal=False))
-        if cross_sequence[-2] == 1 and not self.position_open:
-            print("found entry")
-            entry_check = True
-        
-        return entry_check
+        """Checks entry function"""
+        return self.entry_signal.evaluate(self.dm.data) 
+
 
     def check_exit(self):
         """
         Right now simple EMA cross 10 25
         """
-        exit_check = False
-        if self.position_open:
-            cross_sequence = list(ta.cross(self.dm.data["EMA_10"], self.dm.data["EMA_25"], above=False, equal=False))
-            if cross_sequence[-2] == 1:
-                print("found exit")
-                exit_check = True
-
-        return exit_check
+        return self.exit_signal.evaluate(self.dm.data)
     
     def buy_position(self, money):
         """
@@ -77,10 +68,10 @@ class StrategyManager:
         """
         now = datetime.now()
 
-        if self.check_entry() and not (now.hour == 21 and now.minute >= 58):
+        if self.check_entry() and not self.position_open and not (now.hour == 21 and now.minute >= 58) :
             self.buy_position(money)
 
-        if self.check_exit():
+        if self.position_open and self.check_exit():
             self.sell_position()
         
         if now.hour == 21 and now.minute == 58:
@@ -106,11 +97,21 @@ class StrategyManager:
     "indicators": {}
     "interval": "1m"
     "period": "1D"
-    "entry_rules": {},
-    "close_rules": {},
+    "entry_rule": {}, # plug directly the function
+    "close_rule": {},
     
 }
 """
+"""
+"entry_rule": {         //Also for close_rule
+    "type": "AND",
+    "signals": [
+        {"type": "ema_cross_above", "fast": 10, "slow": 25},
+        {"type": "rsi_oversold", "period": 14, "threshold": 30}
+    ]
+}
+"""
+
 """
 ticker_data = "AAPL"
 ticker_api = "AAPL_US_EQ" 
